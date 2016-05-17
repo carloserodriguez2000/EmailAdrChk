@@ -6,88 +6,86 @@ def cleanS ( string ):
     return cleanS
 
 ################################################################################
-#
-def stripComment ( sLine):
-   # code
-    print( sLine + 'cheking')    
-    
+# this cole be used also "str.partition(sep)"
 ################################################################################
-#
 def GetDomain(sLine):
-    # code
-##    print( sLine + 'cheking')
     words = sLine.split()
     pieces = sLine.split('@')
-##    print(pieces[1])
- 
     return (pieces[1])
 
 ################################################################################
 #
 def GetLocalS(sLine):
-    # code
-##    print( sLine + 'cheking')
     words = sLine.split()
     pieces = sLine.split('@')
-##    print(pieces[0])
     return (pieces[0])
+
 ################################################################################
 #
 def checkValidDomain(domainS):
-    # code
-    print( domainS + 'cheking')
-    if(len( domainS) >63):
-        print('Domain part is longer than 63 chars')
+    if(len( domainS) >254):
+        print('Domain part is longer than 254 chars')
+        return False
+
+    if (' ' in domainS):
         return False
     
-    else:
+    if ('-' in domainS):
+        alphaNumDomS = domainS.split('-')
+        domainS = alphaNumDomS[0]+alphaNumDomS[1]
+    else :
+        alphaNumDomS = domainS
+
+    if ('.' in domainS):
+        alphaNumDomS = domainS.split('.')
+        domainS = alphaNumDomS[0]+alphaNumDomS[1]
+    else :
+        alphaNumDomS = domainS
+       
+    if( domainS.isalnum() == True):
         return True
+    else:
+        return False
     
 ################################################################################
 #
 def checkValidLocal(localS):
-    #code
-    print( localS + 'cheking')
+    if(len( localS) >64):
+        print('Local part is longer than 64 chars')
+        return False
+    if ( not localS[0].isalpha()):
+         print('First Digit is not alpha', localS)
+         return False
+    segments = localS.split('.')
+    print ('Segments =', segments)
+    return True
+
+    
 ################################################################################
 #
 def main ():
+    continueLoop = True
+    while (continueLoop == True):
+        sLine = input( 'Enter an Email address to check syntax: ')
+        sLine = cleanS( sLine)
+        if( len(sLine)>255):
+            print("Address has %i chars. It is too long. max 256 total" %(len(sLIne)))
+        
+        domainS = GetDomain(sLine)
+        localS = GetLocalS(sLine)
 
-    sLine = input( 'Enter an Email address to check syntax: ')
-    sLine = cleanS( sLine)
-    domainS = GetDomain(sLine)
-    localS = GetLocalS(sLine)
+        print('Domain=\"%s\". Local= \"%s\".' %(domainS, localS))
 
-    print('Domain=\"%s\". Local= \"%s\".' %(domainS, localS)) 
+        if (checkValidDomain(domainS) == True):
+            print ('Domain \"%s\" is VALID' %(domainS))
 
-##    if( checkValidDomain(domainS)== False):
-##        print( 'Domain \"%s\" is NOT-VALID' % (domainS))
-##    else :
-##        print( 'Domain \"%s\" is NOT-VALID' % (domainS))
-##
-##    if( checkValidLocal(localS)== False):
-##        print( 'Local \"%s\" is NOT-VALID' % (localS))
-##    else :
-##        print( 'Local \"%s\" is NOT-VALID' % (localS))
-##
-##
-##    indexer = list()
-##    sLen = len(sLine)
-##    indexer = range(sLen)     #Create an array for 0:len(
-##    sReverse = list()
-##    sReverseLine = ''
-##    
-##    for index in indexer :
-##        ##print ((sLen-1)-index)
-##        sReverse.append( sLine[(sLen-1)-index])
-##        sReverseLine +=  sReverse[index]
-##        ##print(index)
-##
-##    print(sLine)
-##    print(sReverse)
-##    print(sReverseLine)
-##    if( sLine == sReverseLine):
-##        print( 'String \"%s\" is a palindrome' %(sLine))
-##
+        if( checkValidLocal(localS)== True):
+            print( 'Local \"%s\" is VALID' % (localS))
+            
+        continueLoop = (input("Press 1 to run again: ") == '1')
+    else :
+        print("Thank you for Playing.  Bye.")
+         
 ################################################################################
 #
 ################################################################################
